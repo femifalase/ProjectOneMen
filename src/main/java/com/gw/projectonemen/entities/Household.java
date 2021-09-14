@@ -2,6 +2,8 @@ package com.gw.projectonemen.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.eclipse.persistence.jpa.config.Cascade;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -9,8 +11,10 @@ import java.util.Set;
 
 @Data
 @Entity
+
 public class Household implements Serializable, Comparable<Household> {
 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long householdId;
     private String householdName;
@@ -26,12 +30,21 @@ public class Household implements Serializable, Comparable<Household> {
             @AttributeOverride(name = "addressLatitude", column = @Column(columnDefinition = "ADDRESSLATITUDE")),
             @AttributeOverride(name = "addressLongitude", column = @Column(columnDefinition = "ADDRESSLONGITUDE"))
     })
-    private TerraFirmaAddress householdAddress;
-    @OneToMany(mappedBy = "household")
-    private final Set<Person> householdMembers = new HashSet<>();
+    private final TerraFirmaAddress householdAddress = new TerraFirmaAddress();
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL)
+    private final Set<HouseholdMembership> householdMembers = new HashSet<>();
+
+//    Constructor(s)......//
+
+
+    public Household() {
+    }
+
+    public Household(String householdName) {
+        this.householdName = householdName;
+    }
 
 //    Class Method(s)......
-
 
 
     @Override
@@ -53,8 +66,9 @@ public class Household implements Serializable, Comparable<Household> {
         return result;
     }
 
-   /**
-    * The default order of households is by household identifiers*/
+    /**
+     * The default order of households is by household identifiers
+     */
     @Override
     public int compareTo(Household o) {
         if (this.getHouseholdId().equals(o.householdId)) {

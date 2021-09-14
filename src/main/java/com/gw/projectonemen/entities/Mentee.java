@@ -2,17 +2,20 @@ package com.gw.projectonemen.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "MENTEES")
-public class Mentee {
+public class Mentee extends Role implements Serializable {
     @Id
     private Long menteeId;
+    @OneToOne
+    @NonNull
+    private Person person;
     @ManyToOne
     @JoinColumn(name ="MENTOR_ID")
     private Mentor mentor;
@@ -21,5 +24,15 @@ public class Mentee {
     @Column(name = "MENTORSHIP_END_DATE")
     private LocalDate mentorshipEndDate;
 
+//    Constructor(s)......//
+    public Mentee() {
+        this.setRoleName("Mentee");
+        this.setRoleDescription("");
+    }
+
+    public Mentee(Person person) {
+       this();
+       this.setPerson(person);
+    }
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -26,9 +27,10 @@ public class Person implements Serializable {
             @AttributeOverride(name = "middlename", column = @Column(name = "MIDDLE_NAME")),
             @AttributeOverride(name = "familyname", column = @Column(name = "FAMILY_NAME"))
     })
+    @NonNull
     private final PersonName personName = new PersonName();
     @OneToMany(mappedBy = "person")
-    private Set<Household> householdMembership = new HashSet<>();
+    private Set<HouseholdMembership> householdMembership = new HashSet<>();
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private Mentor mentor;
 
